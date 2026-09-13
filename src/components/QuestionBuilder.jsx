@@ -10,7 +10,7 @@ import {
   questionToDraft,
 } from '../utils/questions'
 
-export default function QuestionBuilder({ onSave, editingQuestion, onCancelEdit }) {
+export default function QuestionBuilder({ onSave, editingQuestion, onCancelEdit, targetPageLabel }) {
   const [draft, setDraft] = useState(() => emptyQuestionDraft())
 
   useEffect(() => {
@@ -74,6 +74,9 @@ export default function QuestionBuilder({ onSave, editingQuestion, onCancelEdit 
     <section className="rounded-lg border border-gray-200 bg-white p-4">
       <h2 className="mb-3 text-sm font-semibold text-gray-900">
         {editingQuestion ? 'Edit Question' : 'Add Question'}
+        {!editingQuestion && targetPageLabel && (
+          <span className="ml-2 font-normal text-gray-500">→ {targetPageLabel}</span>
+        )}
       </h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <label className="flex flex-col gap-1 text-sm text-gray-700">

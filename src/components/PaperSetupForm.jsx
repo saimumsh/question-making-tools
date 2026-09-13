@@ -58,19 +58,6 @@ export default function PaperSetupForm({ paper, onFieldChange, autoTotal, onOver
             </div>
           )}
         </div>
-
-        <label className="flex flex-col gap-1 text-sm text-gray-700">
-          Questions per Page (PDF)
-          <input
-            type="number"
-            min="0"
-            step="1"
-            value={paper.questionsPerPage ?? ''}
-            placeholder="Auto (fit as many as possible)"
-            onChange={(e) => onFieldChange('questionsPerPage', e.target.value ? Number(e.target.value) : null)}
-            className="rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-          />
-        </label>
       </div>
 
       <label className="mt-4 flex items-center gap-2 text-sm text-gray-700">

@@ -112,8 +112,10 @@ function StudentInfoLine({ label }) {
   )
 }
 
-const PreviewBase = forwardRef(function PreviewBase({ paper, questions, mode, heading }, ref) {
+const PreviewBase = forwardRef(function PreviewBase({ paper, pages, defaultQuestionsPerPage, mode, heading }, ref) {
   const metaItems = META_FIELDS.filter((field) => paper[field.key])
+  const hasAnyQuestions = pages.some((page) => page.questions.length > 0)
+  let questionNumber = 0
 
   return (
     <div ref={ref} className="mx-auto max-w-2xl bg-white p-6 text-gray-900">
@@ -153,23 +155,56 @@ const PreviewBase = forwardRef(function PreviewBase({ paper, questions, mode, he
         </dl>
       </div>
 
-      {questions.length === 0 ? (
+      {!hasAnyQuestions ? (
         <p className="text-sm italic text-gray-400">No questions added yet.</p>
       ) : (
-        <ol className="flex flex-col gap-4">
-          {questions.map((q, i) => (
-            <li key={q.id} data-pdf-block data-pdf-block-type="question" className="break-inside-avoid">
-              <p className="text-sm font-medium text-gray-900">
-                {i + 1}. {q.text}{' '}
-                <span className="font-normal text-gray-500">[{q.marks} marks]</span>
-              </p>
-              {q.image && (
-                <img src={q.image} alt="" className="mt-2 max-h-64 w-auto rounded border border-gray-200 object-contain" />
+        pages.map((page, pageIndex) => {
+          if (page.questions.length === 0) return null
+          const effectiveLimit = page.maxQuestions ?? defaultQuestionsPerPage
+
+          return (
+            <div key={page.id}>
+              {pageIndex > 0 && (
+                <div
+                  className="my-6 flex items-center gap-3 text-xs uppercase tracking-wide text-gray-400"
+                  aria-hidden="true"
+                >
+                  <span className="h-px flex-1 bg-gray-200" />
+                  Page {pageIndex + 1}
+                  <span className="h-px flex-1 bg-gray-200" />
+                </div>
               )}
-              <QuestionBody question={q} mode={mode} />
-            </li>
-          ))}
-        </ol>
+              <ol className="flex flex-col gap-4">
+                {page.questions.map((q) => {
+                  questionNumber += 1
+                  return (
+                    <li
+                      key={q.id}
+                      data-pdf-block
+                      data-pdf-block-type="question"
+                      data-page-id={page.id}
+                      data-page-limit={effectiveLimit ?? ''}
+                      className="break-inside-avoid"
+                    >
+                      <p className="text-sm font-medium text-gray-900">
+                        {questionNumber}. {q.text}{' '}
+                        <span className="font-normal text-gray-500">[{q.marks} marks]</span>
+                      </p>
+                      {q.image && (
+                        <img
+                          src={q.image}
+                          alt=""
+                          className="mt-2 max-h-64 w-auto rounded border border-gray-200 object-contain"
+                        />
+                      )}
+                      <QuestionBody question={q} mode={mode} />
+                    </li>
+                  )
+                })}
+              </ol>
+            </div>
+          )
+        })
       )}
     </div>
   )

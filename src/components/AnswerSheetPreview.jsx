@@ -1,12 +1,13 @@
 import { forwardRef } from 'react'
 import PreviewBase from './PreviewBase'
 
-const AnswerSheetPreview = forwardRef(function AnswerSheetPreview({ paper, questions }, ref) {
+const AnswerSheetPreview = forwardRef(function AnswerSheetPreview({ paper, pages, defaultQuestionsPerPage }, ref) {
   return (
     <PreviewBase
       ref={ref}
       paper={paper}
-      questions={questions}
+      pages={pages}
+      defaultQuestionsPerPage={defaultQuestionsPerPage}
       mode="answer"
       heading="Answer Sheet"
     />
